@@ -149,6 +149,7 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    readData();
     return new Scaffold(
       appBar: new AppBar(
           title: new Text('Rugby Score'),
