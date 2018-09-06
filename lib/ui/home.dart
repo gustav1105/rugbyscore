@@ -20,8 +20,8 @@ class ElapsedTime {
 class Dependencies {
   final List<ValueChanged<ElapsedTime>> timerListeners =
       <ValueChanged<ElapsedTime>>[];
-  final TextStyle textStyle =
-      const TextStyle(fontSize: 55.0, color: Colors.white,fontWeight: FontWeight.w800);
+  final TextStyle textStyle = const TextStyle(
+      fontSize: 55.0, color: Colors.white, fontWeight: FontWeight.w800);
   final Stopwatch stopwatch = new Stopwatch();
   final int timerMillisecondsRefreshRate = 30;
 }
@@ -39,38 +39,84 @@ class HomeState extends State<Home> {
   final Dependencies dependencies = new Dependencies();
 
   void stopWatchButtonPressed() {
-    var teamController = TextEditingController();
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: new Text("Team (VS) Team"),
-            content: new SingleChildScrollView(
-              child: new ListBody(
-                children: <Widget>[
-                  new TextField(controller: teamController),
-                  new Padding(padding: new EdgeInsets.all(10.0)),
-                  new RaisedButton(
-                      child: new Text("Start"),
-                      onPressed: () {
-                        String teamsPlaying = teamController.text;
-                        setState(() {
-                          dependencies.stopwatch.reset();
-                          dependencies.stopwatch.start();
-                        });
-                        var currentDateTime = new DateTime.now();
-                        var dateFormat = new DateFormat('yyyy-MM-dd HH:mm:ss');
-                        String formattedCurrentDate = dateFormat.format(currentDateTime);
-                        listItem = '$teamsPlaying\n Game started at: $formattedCurrentDate';
-                        itemsList.add(listItem);
-                        writeData(itemsList.toString());
-                        Navigator.of(context).pop();
-                      })
-                ],
+    if (dependencies.stopwatch.elapsedMilliseconds > 0) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: new Text("End Game?"),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: <Widget>[
+                    new RaisedButton(
+                        child: new Text("Cancel"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                    new Padding(padding: EdgeInsets.all(10.0)),
+                    new RaisedButton(
+                        child: new Text("Yes"),
+                        onPressed: () {
+                          setState(() {
+                            var currentDateTime = new DateTime.now();
+                            var dateFormat =
+                                new DateFormat('yyyy-MM-dd HH:mm:ss');
+                            String formattedCurrentDate =
+                                dateFormat.format(currentDateTime);
+                            String timeElapsed =
+                                dependencies.stopwatch.elapsed.toString();
+                            timeElapsed = timeElapsed.substring(0, 7);
+                            dependencies.stopwatch.stop();
+                            dependencies.stopwatch.reset();
+                            listItem =
+                                "$timeElapsed\n Game Over at: $formattedCurrentDate";
+                            writeData(listItem);
+                            itemsList.add(listItem);
+                          });
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                ),
               ),
-            ),
-          );
-        });
+            );
+          });
+    } else {
+      var teamController = TextEditingController();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: new Text("Team (VS) Team"),
+              content: new SingleChildScrollView(
+                child: new ListBody(
+                  children: <Widget>[
+                    new TextField(controller: teamController),
+                    new Padding(padding: new EdgeInsets.all(10.0)),
+                    new RaisedButton(
+                        child: new Text("Start"),
+                        onPressed: () {
+                          String teamsPlaying = teamController.text;
+                          setState(() {
+                            dependencies.stopwatch.reset();
+                            dependencies.stopwatch.start();
+                          });
+                          var currentDateTime = new DateTime.now();
+                          var dateFormat =
+                              new DateFormat('yyyy-MM-dd HH:mm:ss');
+                          String formattedCurrentDate =
+                              dateFormat.format(currentDateTime);
+                          listItem =
+                              '$teamsPlaying\n Game started at: $formattedCurrentDate';
+                          writeData(listItem);
+                          itemsList.add(listItem);
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                ),
+              ),
+            );
+          });
+    }
   }
 
   void pauseStopWatchButtonPressed() {
@@ -88,8 +134,8 @@ class HomeState extends State<Home> {
         listItem = 'Game resumed at: $formattedCurrentDate';
       }
     });
+    writeData(listItem);
     itemsList.add(listItem);
-    writeData(itemsList.toString());
   }
 
   Widget buildTimerActionButton(VoidCallback callback) {
@@ -124,19 +170,33 @@ class HomeState extends State<Home> {
             child: new Column(
               children: <Widget>[
                 new Padding(padding: EdgeInsets.all(10.0)),
-                new FloatingActionButton(
-                    child: Icon(Icons.share),
-                    onPressed: () {
-                      final RenderBox box = context.findRenderObject();
-                      Share.share(itemsList.toString(),
-                          sharePositionOrigin:
-                          box.localToGlobal(Offset.zero) & box.size);
-                    }),
+                new Row(
+                  children: <Widget>[
+                    new Padding(padding: EdgeInsets.only(left: 100.0)),
+                    new FloatingActionButton(
+                        child: Icon(Icons.share),
+                        onPressed: () {
+                          final RenderBox box = context.findRenderObject();
+                          Share.share(itemsList.toString(),
+                              sharePositionOrigin:
+                                  box.localToGlobal(Offset.zero) & box.size);
+                        }),
+                    new Padding(padding: EdgeInsets.only(left: 25.0, right: 25.0)),
+                    new FloatingActionButton(
+                        backgroundColor: Colors.red,
+                        child: Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            itemsList.clear();
+                          });
+                        }),
+                  ],
+                ),
                 new Padding(padding: new EdgeInsets.all(15.5)),
                 new Center(
                     child: new TimerText(
-                      dependencies: dependencies,
-                    )),
+                  dependencies: dependencies,
+                )),
                 new Padding(padding: EdgeInsets.all(10.0)),
                 new Expanded(
                     child: new ListView.builder(
@@ -202,16 +262,17 @@ class HomeState extends State<Home> {
                               dependencies.stopwatch.elapsed.toString();
                           timeElapsed = timeElapsed.substring(0, 7);
                           if (_currentIndex == 0) {
-                            itemsList.add(
-                                '$timeElapsed\n2 Points scored by Player Number $playerNumber');
+                            listItem =
+                                '$timeElapsed\n2 Points scored by Player Number $playerNumber';
                           } else if (_currentIndex == 1) {
-                            itemsList.add(
-                                '$timeElapsed\n3 Points scored by Player Number $playerNumber');
+                            listItem =
+                                '$timeElapsed\n3 Points scored by Player Number $playerNumber';
                           } else if (_currentIndex == 2) {
-                            itemsList.add(
-                                '$timeElapsed\n5 Points Scored by Player Number $playerNumber');
+                            listItem =
+                                '$timeElapsed\n5 Points Scored by Player Number $playerNumber';
                           }
-                          writeData(itemsList.toString());
+                          writeData(listItem);
+                          itemsList.add(listItem);
                           Navigator.of(context).pop();
                         })
                   ],
@@ -233,7 +294,7 @@ Future<File> get _localFile async {
 
 Future<File> writeData(String message) async {
   final file = await _localFile;
-  return file.writeAsString('$message\r\n');
+  return file.writeAsString('$message\r\n', mode: FileMode.append);
 }
 
 Future<File> clearFile() async {
@@ -245,6 +306,7 @@ Future<String> readData() async {
   try {
     final file = await _localFile;
     String data = await file.readAsString();
+    print(data);
     return data;
   } catch ($e) {
     return "error";

@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="129eb2c8-53b2-4fb0-a0b8-c1794d3d83d7" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
       <change beforePath="$PROJECT_DIR$/lib/ui/home.dart" afterPath="$PROJECT_DIR$/lib/ui/home.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -25,7 +24,7 @@
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+              <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -36,8 +35,8 @@
       <file leaf-file-name="home.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/ui/home.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2363">
-              <caret line="66" column="52" lean-forward="true" selection-start-line="66" selection-start-column="52" selection-end-line="66" selection-end-column="52" />
+            <state relative-caret-position="304">
+              <caret line="189" column="46" lean-forward="false" selection-start-line="189" selection-start-column="46" selection-end-line="189" selection-end-column="46" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -67,6 +66,10 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>resum</find>
+      <find>write</find>
+      <find>buildTimerActionButton</find>
+      <find>stopWatchButtonPressed</find>
+      <find>listItem</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -523,17 +526,25 @@
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/share-0.5.3/lib/share.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="31" column="28" lean-forward="false" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/ui/home.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2363">
-          <caret line="66" column="52" lean-forward="true" selection-start-line="66" selection-start-column="52" selection-end-line="66" selection-end-column="52" />
+        <state relative-caret-position="304">
+          <caret line="189" column="46" lean-forward="false" selection-start-line="189" selection-start-column="46" selection-end-line="189" selection-end-column="46" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
