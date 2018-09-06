@@ -44,7 +44,7 @@ class HomeState extends State<Home> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: new Text("Team vs Team"),
+            title: new Text("Team (VS) Team"),
             content: new SingleChildScrollView(
               child: new ListBody(
                 children: <Widget>[
@@ -60,12 +60,8 @@ class HomeState extends State<Home> {
                         });
                         var currentDateTime = new DateTime.now();
                         var dateFormat = new DateFormat('yyyy-MM-dd HH:mm:ss');
-                        String formattedCurrentDate =
-                            dateFormat.format(currentDateTime);
-                        clearFile();
-
-                        listItem =
-                            '$teamsPlaying\n Game started at: $formattedCurrentDate';
+                        String formattedCurrentDate = dateFormat.format(currentDateTime);
+                        listItem = '$teamsPlaying\n Game started at: $formattedCurrentDate';
                         itemsList.add(listItem);
                         writeData(itemsList.toString());
                         Navigator.of(context).pop();
@@ -207,7 +203,7 @@ class HomeState extends State<Home> {
                           timeElapsed = timeElapsed.substring(0, 7);
                           if (_currentIndex == 0) {
                             itemsList.add(
-                                '$timeElapsed\n Points scored by Player Number $playerNumber');
+                                '$timeElapsed\n2 Points scored by Player Number $playerNumber');
                           } else if (_currentIndex == 1) {
                             itemsList.add(
                                 '$timeElapsed\n3 Points scored by Player Number $playerNumber');
