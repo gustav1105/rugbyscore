@@ -35,6 +35,8 @@ class HomeState extends State<Home> {
   List<String> itemsList = [];
   String listItem;
   int _currentIndex = 0;
+  int oppositionCounter = 0;
+  int friendlyCounter = 0;
 
   final Dependencies dependencies = new Dependencies();
 
@@ -67,7 +69,6 @@ class HomeState extends State<Home> {
                                 dependencies.stopwatch.elapsed.toString();
                             timeElapsed = timeElapsed.substring(0, 7);
                             dependencies.stopwatch.stop();
-                            dependencies.stopwatch.reset();
                             listItem =
                                 "$timeElapsed\n Game Over at: $formattedCurrentDate";
                             writeData(listItem);
@@ -131,7 +132,7 @@ class HomeState extends State<Home> {
         listItem = '$timeElapsed\nGame paused at: $formattedCurrentDate';
       } else {
         dependencies.stopwatch.start();
-        listItem = 'Game resumed at: $formattedCurrentDate';
+        listItem = 'Game resumed at: $formattedCurrentDate \nOpposition Score is $oppositionCounter';
       }
     });
     writeData(listItem);
@@ -172,8 +173,8 @@ class HomeState extends State<Home> {
               children: <Widget>[
                 new Padding(padding: EdgeInsets.all(10.0)),
                 new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Padding(padding: EdgeInsets.only(left: 100.0)),
                     new FloatingActionButton(
                         child: Icon(Icons.share),
                         onPressed: () {
@@ -182,22 +183,64 @@ class HomeState extends State<Home> {
                               sharePositionOrigin:
                                   box.localToGlobal(Offset.zero) & box.size);
                         }),
-                    new Padding(padding: EdgeInsets.only(left: 25.0, right: 25.0)),
+                    new Padding(padding: EdgeInsets.all(10.0)),
                     new FloatingActionButton(
                         backgroundColor: Colors.red,
                         child: Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
                             itemsList.clear();
+                            oppositionCounter = 0;
+                            dependencies.stopwatch.reset();
                           });
                         }),
+                    new Padding(padding: EdgeInsets.all(10.0)),
+                    new FloatingActionButton(
+                      onPressed: () {
+                        setState(() {
+                          oppositionCounter = oppositionCounter + 1;
+                        });
+                      },
+                      backgroundColor: Colors.orange,
+                      child: Icon(Icons.add_circle),
+                    )
                   ],
                 ),
                 new Padding(padding: new EdgeInsets.all(15.5)),
-                new Center(
-                    child: new TimerText(
-                  dependencies: dependencies,
-                )),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Container(
+                      padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                      decoration: new BoxDecoration(
+                          border:
+                              new Border.all(color: Colors.white, width: 1.0),
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0))),
+                      child: new TimerText(
+                        dependencies: dependencies,
+                      ),
+                    ),
+                    new Container(
+                      padding: EdgeInsets.only(right: 10.0, left: 6.0),
+                      decoration: new BoxDecoration(
+                          border: new Border.all(color: Colors.white,width: 1.0),
+                          color: Colors.black,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0))),
+                      child: new Text(
+                        '$oppositionCounter',
+                        style: TextStyle(
+                            fontSize: 55.0,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    )
+                  ],
+                ),
                 new Padding(padding: EdgeInsets.all(10.0)),
                 new Expanded(
                     child: new ListView.builder(
@@ -221,6 +264,7 @@ class HomeState extends State<Home> {
               ],
             ),
           ),
+          new Text("$friendlyCounter",style: new TextStyle(fontSize: 55.0,color: Colors.white),)
         ],
       ),
       bottomNavigationBar: new BottomNavigationBar(
@@ -265,12 +309,21 @@ class HomeState extends State<Home> {
                           if (_currentIndex == 0) {
                             listItem =
                                 '$timeElapsed\n2 Points scored by Player Number $playerNumber';
+                            setState(() {
+                              friendlyCounter = friendlyCounter + 2;
+                            });
                           } else if (_currentIndex == 1) {
                             listItem =
                                 '$timeElapsed\n3 Points scored by Player Number $playerNumber';
+                            setState(() {
+                              friendlyCounter = friendlyCounter + 3;
+                            });
                           } else if (_currentIndex == 2) {
                             listItem =
                                 '$timeElapsed\n5 Points Scored by Player Number $playerNumber';
+                            setState(() {
+                              friendlyCounter = friendlyCounter + 2;
+                            });
                           }
                           writeData(listItem);
                           itemsList.add(listItem);
@@ -296,11 +349,6 @@ Future<File> get _localFile async {
 Future<File> writeData(String message) async {
   final file = await _localFile;
   return file.writeAsString('$message\r\n', mode: FileMode.append);
-}
-
-Future<File> clearFile() async {
-  final file = await _localFile;
-  return file.writeAsStringSync('');
 }
 
 Future<String> readData() async {
